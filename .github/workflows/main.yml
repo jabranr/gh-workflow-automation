@@ -16,12 +16,11 @@ jobs:
       - name: "Automated Version Bump"
         uses: "phips28/gh-action-bump-version@master"
         with:
-          tag-prefix: ''
+          tag-prefix: ""
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-jobs:
   test:
-    needs: ['build']
+    needs: ["build"]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
