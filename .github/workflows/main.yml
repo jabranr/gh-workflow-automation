@@ -19,3 +19,13 @@ jobs:
           tag-prefix: ''
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+jobs:
+  test:
+    needs: ['build']
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Run unit tests
+        run: |
+          npm test
