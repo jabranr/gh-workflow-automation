@@ -1,4 +1,4 @@
-name: CI
+name: CI pipeline
 on:
   push:
     branches:
@@ -7,24 +7,25 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-
+      - name: "Checkout latest code"
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          apt-get update && apt-get install -y jq
       - name: "Setup Node.js"
         uses: "actions/setup-node@v1"
         with:
           node-version: 12
-      - name: "Automated Version Bump"
+      - name: Run unit tests
+        run: |
+          npm test
+      - name: "Bump version"
         uses: "phips28/gh-action-bump-version@master"
         with:
           tag-prefix: ""
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  test:
-    needs: ["build"]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Run unit tests
+      - name: "Reac latest version"
         run: |
-          npm test
+          VERSION=`cat package.json | jq -r .version`
+          echo "$VERSION"
